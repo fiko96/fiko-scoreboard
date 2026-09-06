@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FiKo Scoreboard</title>
+  
+  <!-- Firebase SDKs (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --panel-bg: #161e2e;
+      --card-bg: rgba(11, 15, 25, 0.94);
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.14);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-stack);
+    }
+
+    body {
+      background-color: transparent;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================
+       DISPLAY OVERLAY MODE (?mode=display)
+       ========================================================== */
+    #display-container {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      pointer-events: none;
+    }
+
+    .scoreboard-overlay {
+      position: absolute;
+      top: 24px;
+      left: 32px;
+      width: 600px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      font-weight: 700;
+    }
+
+    .overlay-status-bar {
+      background: rgba(0, 0, 0, 0.45);
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 11px;
+      letter-spacing: 0.8px;
+    }
+
+    .status-badge {
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .overlay-main-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .team-panel {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      gap: 16px;
+    }
+
+    .team-panel.away {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .team-panel.home {
+      flex-direction: row-reverse;
+    }
+
+    .team-logo-frame {
+      width: 62px;
+      height: 62px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .team-logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .team-meta {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .team-panel.home .team-meta {
+      text-align: right;
+    }
+
+    .team-name {
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .team-score {
+      font-size: 44px;
+      line-height: 1;
+      font-weight: 900;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .overlay-sub-bar {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 6px 14px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* ==========================================================
+       CONTROLLER MODE (Default view)
+       ========================================================== */
+    #controller-container {
+      background-color: var(--bg-dark);
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .controller-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .controller-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .live-status {
+      font-size: 12px;
+      font-weight: 700;
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .game-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .game-btn:active {
+      transform: scale(0.98);
+    }
+
+    .game-btn.active {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.15);
+    }
+
+    .game-btn-time {
+      font-size: 11px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .game-btn-match {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .scoreboard-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .score-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .team-controller {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .ctrl-team-name {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+      min-height: 20px;
+    }
+
+    .ctrl-score-value {
+      font-size: 54px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .score-btn {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.15s ease;
+    }
+
+    .score-btn:active {
+      opacity: 0.7;
+    }
+
+    .btn-plus {
+      background-color: #2563eb;
+    }
+
+    .btn-minus {
+      background-color: #475569;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      background-color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .shortcuts-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= DISPLAY OVERLAY ================= -->
+  <div id="display-container">
+    <div class="scoreboard-overlay">
+      <div class="overlay-status-bar">
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          <span>LIVE • CONNECTED</span>
+        </div>
+        <span id="disp-game-info">WEEK 4 • FIELD MEL • GAME 1</span>
+      </div>
+
+      <div class="overlay-main-bar">
+        <!-- Away -->
+        <div class="team-panel away">
+          <div class="team-logo-frame">
+            <img id="disp-away-logo" src="" alt="Away" onerror="this.src=createCrestBadge('AWAY','#334155')">
+          </div>
+          <div class="team-meta">
+            <div class="team-name" id="disp-away-name">AWAY</div>
+            <div class="team-score" id="disp-away-score">0</div>
+          </div>
+        </div>
+
+        <!-- Home -->
+        <div class="team-panel home">
+          <div class="team-logo-frame">
+            <img id="disp-home-logo" src="" alt="Home" onerror="this.src=createCrestBadge('HOME','#334155')">
+          </div>
+          <div class="team-meta">
+            <div class="team-name" id="disp-home-name">HOME</div>
+            <div class="team-score" id="disp-home-score">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay-sub-bar">
+        <span>AWAY</span>
+        <span>HOME</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CONTROLLER INTERFACE ================= -->
+  <div id="controller-container">
+    <div class="controller-header">
+      <div class="controller-title">FiKo Scoreboard Controller</div>
+      <div class="live-status" id="connection-status">
+        <div class="status-dot"></div>
+        <span>CONNECTING...</span>
+      </div>
+    </div>
+
+    <div class="section-label">Select Game (Week 4 • Field MEL)</div>
+    <div class="game-grid" id="game-buttons"></div>
+
+    <div class="scoreboard-box">
+      <div class="score-columns">
+        <!-- Away -->
+        <div class="team-controller">
+          <div class="ctrl-team-name" id="ctrl-away-name">AWAY</div>
+          <div class="ctrl-score-value" id="ctrl-away-score">0</div>
+          <div class="btn-row">
+            <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
+            <button class="score-btn btn-plus" onclick="changeScore('away', 1)">+1</button>
+          </div>
+        </div>
+
+        <!-- Home -->
+        <div class="team-controller">
+          <div class="ctrl-team-name" id="ctrl-home-name">HOME</div>
+          <div class="ctrl-score-value" id="ctrl-home-score">0</div>
+          <div class="btn-row">
+            <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
+            <button class="score-btn btn-plus" onclick="changeScore('home', 1)">+1</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="reset-btn" onclick="resetScores()">RESET SCORE (0 - 0)</button>
+      <div class="shortcuts-note">
+        Keyboard Shortcuts: <b>+ / =</b> (Home +1) | <b>-</b> (Home -1) | <b>]</b> (Away +1) | <b>[</b> (Away -1)
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dynamic Fallback Crest Generator for teams without image files
+    function createCrestBadge(text, bgHex = "#1e293b", textHex = "#ffffff") {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="${bgHex}" stroke="#ffffff" stroke-width="4"/>
+        <text x="50" y="58" font-size="32" font-family="Arial, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${text}</text>
+      </svg>`;
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+    }
+
+    /* ==========================================================
+       WEEK 4 FIELD MEL SCHEDULE PRESETS & IMAGE ASSETS
+       ========================================================== */
+    const MEL_WEEK4_GAMES = [
+      {
+        id: 1,
+        time: "8:00 AM",
+        awayName: "DIRTY BIRDS",
+        homeName: "SENATORS",
+        awayLogo: "db.jpg",
+        homeLogo: "sen.jpg",
+        info: "WEEK 4 • FIELD MEL • GAME 1"
+      },
+      {
+        id: 2,
+        time: "9:00 AM",
+        awayName: "4TF",
+        homeName: "TTP",
+        awayLogo: "4tf.jpg",
+        homeLogo: "ttp.jpg",
+        info: "WEEK 4 • FIELD MEL • GAME 2"
+      },
+      {
+        id: 3,
+        time: "10:00 AM",
+        awayName: "SOB",
+        homeName: "NEW WAVE",
+        awayLogo: "sob.jpg",
+        homeLogo: "nw.jpg",
+        info: "WEEK 4 • FIELD MEL • GAME 3"
+      },
+      {
+        id: 4,
+        time: "11:00 AM",
+        awayName: "PITBULLS",
+        homeName: "NIGHTMARE",
+        awayLogo: createCrestBadge("PB", "#475569"),
+        homeLogo: createCrestBadge("NM", "#0f172a"),
+        info: "WEEK 4 • FIELD MEL • GAME 4"
+      },
+      {
+        id: 5,
+        time: "12:00 PM",
+        awayName: "DUFFLEBAG BOYZ",
+        homeName: "THUNDERCATS",
+        awayLogo: createCrestBadge("BB", "#0284c7"),
+        homeLogo: "tc.jpg",
+        info: "WEEK 4 • FIELD MEL • GAME 5"
+      },
+      {
+        id: 6,
+        time: "1:00 PM",
+        awayName: "FALLEN ANGELS",
+        homeName: "USUAL SUSPECTS",
+        awayLogo: "fa.jpg",
+        homeLogo: "us.jpg",
+        info: "WEEK 4 • FIELD MEL • GAME 6"
+      }
+    ];
+
+    /* ==========================================================
+       FIREBASE CONFIG & INITIALIZATION
+       ========================================================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZKiu4pb9qh_pwG3z8NJdB6siQ6pyPtc4",
+      authDomain: "fiko-scoreboard.firebaseapp.com",
+      databaseURL: "https://fiko-scoreboard-default-rtdb.firebaseio.com",
+      projectId: "fiko-scoreboard",
+      storageBucket: "fiko-scoreboard.firebasestorage.app",
+      messagingSenderId: "829447749880",
+      appId: "1:829447749880:web:c7532983c2543911fbfb0d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDisplay = urlParams.get('mode') === 'display';
+
+    let currentHomeScore = 0;
+    let currentAwayScore = 0;
+    let activeGameId = 1;
+
+    if (isDisplay) {
+      document.getElementById('display-container').style.display = 'block';
+      document.getElementById('controller-container').style.display = 'none';
+      document.body.style.backgroundColor = 'transparent';
+    } else {
+      document.getElementById('display-container').style.display = 'none';
+      document.getElementById('controller-container').style.display = 'block';
+      renderGameButtons();
+    }
+
+    auth.signInAnonymously()
+      .then(() => {
+        const statusElem = document.getElementById('connection-status');
+        if (statusElem) {
+          statusElem.innerHTML = '<div class="status-dot"></div><span>LIVE • CONNECTED</span>';
+          statusElem.style.color = '#22c55e';
+        }
+        listenToDatabase();
+      })
+      .catch((err) => {
+        console.error("Auth error:", err);
+        const statusElem = document.getElementById('connection-status');
+        if (statusElem) {
+          statusElem.textContent = '● ERROR CONNECTING';
+          statusElem.style.color = '#ef4444';
+        }
+      });
+
+    function listenToDatabase() {
+      db.ref("/").on("value", (snapshot) => {
+        const val = snapshot.val();
+        if (!val) return;
+
+        currentHomeScore = val.homeScore ?? 0;
+        currentAwayScore = val.awayScore ?? 0;
+
+        if (isDisplay) {
+          document.getElementById('disp-away-name').textContent = val.awayTeam || "AWAY";
+          document.getElementById('disp-home-name').textContent = val.homeTeam || "HOME";
+          document.getElementById('disp-away-score').textContent = currentAwayScore;
+          document.getElementById('disp-home-score').textContent = currentHomeScore;
+          document.getElementById('disp-game-info').textContent = val.gameInfo || "WEEK 4 • FIELD MEL";
+
+          if (val.awayLogo) document.getElementById('disp-away-logo').src = val.awayLogo;
+          if (val.homeLogo) document.getElementById('disp-home-logo').src = val.homeLogo;
+        } else {
+          document.getElementById('ctrl-away-name').textContent = val.awayTeam || "AWAY";
+          document.getElementById('ctrl-home-name').textContent = val.homeTeam || "HOME";
+          document.getElementById('ctrl-away-score').textContent = currentAwayScore;
+          document.getElementById('ctrl-home-score').textContent = currentHomeScore;
+        }
+      });
+    }
+
+    function renderGameButtons() {
+      const container = document.getElementById('game-buttons');
+      container.innerHTML = "";
+      MEL_WEEK4_GAMES.forEach((g) => {
+        const btn = document.createElement('button');
+        btn.className = `game-btn ${g.id === activeGameId ? 'active' : ''}`;
+        btn.id = `btn-game-${g.id}`;
+        btn.onclick = () => selectGame(g.id);
+        btn.innerHTML = `
+          <div class="game-btn-time">Game ${g.id} • ${g.time}</div>
+          <div class="game-btn-match">${g.awayName} vs ${g.homeName}</div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectGame(id) {
+      activeGameId = id;
+      document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-game-${id}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const match = MEL_WEEK4_GAMES.find(g => g.id === id);
+      if (!match) return;
+
+      db.ref("/").update({
+        awayTeam: match.awayName,
+        homeTeam: match.homeName,
+        awayLogo: match.awayLogo,
+        homeLogo: match.homeLogo,
+        awayScore: 0,
+        homeScore: 0,
+        gameInfo: match.info
+      });
+    }
+
+    function changeScore(team, delta) {
+      if (team === 'home') {
+        const newScore = Math.max(0, currentHomeScore + delta);
+        db.ref("/").update({ homeScore: newScore });
+      } else {
+        const newScore = Math.max(0, currentAwayScore + delta);
+        db.ref("/").update({ awayScore: newScore });
+      }
+    }
+
+    function resetScores() {
+      if (confirm("Reset scores to 0 - 0?")) {
+        db.ref("/").update({ homeScore: 0, awayScore: 0 });
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (isDisplay) return;
+      if (e.key === '=' || e.key === '+') changeScore('home', 1);
+      if (e.key === '-' || e.key === '_') changeScore('home', -1);
+      if (e.key === ']') changeScore('away', 1);
+      if (e.key === '[') changeScore('away', -1);
+    });
+  </script>
+</body>
+</html>
