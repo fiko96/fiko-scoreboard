@@ -36,7 +36,7 @@
     }
 
     /* ==========================================================
-       METALLIC BROADCAST OVERLAY (?mode=display)
+       MC BANNER BROADCAST OVERLAY (?mode=display)
        ========================================================== */
     #display-container {
       display: none;
@@ -46,18 +46,16 @@
       pointer-events: none;
     }
 
-    /* 1:1 Aspect Ratio container matched to the 1024x1024 frame */
-    .metal-overlay-wrapper {
+    .banner-overlay-wrapper {
       position: absolute;
-      top: -120px; /* Pulls the top empty space upward off-screen */
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      width: 780px;
-      height: 780px;
+      width: 880px;
+      height: 285px;
     }
 
-    /* Master Frame Graphic */
-    .metal-frame-bg {
+    .banner-frame-bg {
       position: absolute;
       top: 0;
       left: 0;
@@ -67,90 +65,81 @@
       z-index: 1;
     }
 
-    /* Away Logo (Left Cyan Disc) */
-    .metal-logo-slot.away {
+    /* Left Team Pod (Away Logo) */
+    .banner-logo-slot.away {
       position: absolute;
-      left: 7.4%;
-      top: 37.8%;
-      width: 20.4%;
-      height: 20.4%;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #000000;
+      left: 8.5%;
+      top: 25.5%;
+      width: 24.5%;
+      height: 47%;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 3;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.6);
     }
 
-    /* Home Logo (Right Red Disc) */
-    .metal-logo-slot.home {
+    /* Right Team Pod (Home Logo) */
+    .banner-logo-slot.home {
       position: absolute;
-      left: 72.2%;
-      top: 37.8%;
-      width: 20.4%;
-      height: 20.4%;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #000000;
+      left: 67.0%;
+      top: 25.5%;
+      width: 24.5%;
+      height: 47%;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 3;
-      box-shadow: 0 0 16px rgba(255, 51, 75, 0.6);
     }
 
-    .metal-logo-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .banner-logo-slot img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       border-radius: 50%;
     }
 
-    /* Center Digital LED Screen */
-    .metal-screen {
+    /* Left Digit Box (Away Score) */
+    .banner-score.away {
       position: absolute;
-      left: 30.5%;
-      top: 40.5%;
-      width: 39.0%;
-      height: 15.0%;
+      left: 39.3%;
+      top: 36.5%;
+      width: 8.4%;
+      height: 27.5%;
       z-index: 3;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
       font-family: "Impact", "Arial Black", sans-serif;
-    }
-
-    .metal-score {
-      font-size: 58px;
+      font-size: 50px;
       line-height: 1;
-      width: 80px;
-      text-align: center;
       font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.95), 2px 2px 4px #000000;
       user-select: none;
     }
 
-    .metal-score.away {
-      color: #ffffff;
-      text-shadow: 0 0 14px rgba(0, 240, 255, 0.9), 2px 2px 4px #000000;
-    }
-
-    .metal-score.home {
-      color: #ffffff;
-      text-shadow: 0 0 14px rgba(255, 51, 75, 0.9), 2px 2px 4px #000000;
-    }
-
-    .metal-score-divider {
-      font-size: 32px;
-      color: #64748b;
+    /* Right Digit Box (Home Score) */
+    .banner-score.home {
+      position: absolute;
+      left: 52.3%;
+      top: 36.5%;
+      width: 8.4%;
+      height: 27.5%;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Impact", "Arial Black", sans-serif;
+      font-size: 50px;
+      line-height: 1;
       font-weight: 900;
-      opacity: 0.5;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(255, 51, 75, 0.95), 2px 2px 4px #000000;
+      user-select: none;
     }
 
     /* ==========================================================
-       CONTROLLER MODE (Default view)
+       CONTROLLER INTERFACE (Default view)
        ========================================================== */
     #controller-container {
       background-color: var(--bg-dark);
@@ -334,24 +323,23 @@
 
   <!-- ================= DISPLAY OVERLAY ================= -->
   <div id="display-container">
-    <div class="metal-overlay-wrapper">
-      <img class="metal-frame-bg" src="frame.png" alt="Scoreboard Frame">
+    <div class="banner-overlay-wrapper">
+      <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
 
-      <!-- Away Logo (Left Cyan Disc) -->
-      <div class="metal-logo-slot away">
-        <img id="disp-away-logo" src="db.jpg" alt="Away Logo" onerror="this.src=createCrestBadge('AWAY')">
+      <!-- Left Team Logo -->
+      <div class="banner-logo-slot away">
+        <img id="disp-away-logo" src="db.png" alt="Away Logo" onerror="handleImageError(this, 'AWAY')">
       </div>
 
-      <!-- Center Digital LED Screen -->
-      <div class="metal-screen">
-        <div class="metal-score away" id="disp-away-score">0</div>
-        <div class="metal-score-divider">-</div>
-        <div class="metal-score home" id="disp-home-score">0</div>
-      </div>
+      <!-- Away Score -->
+      <div class="banner-score away" id="disp-away-score">0</div>
 
-      <!-- Home Logo (Right Red Disc) -->
-      <div class="metal-logo-slot home">
-        <img id="disp-home-logo" src="sen.jpg" alt="Home Logo" onerror="this.src=createCrestBadge('HOME')">
+      <!-- Home Score -->
+      <div class="banner-score home" id="disp-home-score">0</div>
+
+      <!-- Right Team Logo -->
+      <div class="banner-logo-slot home">
+        <img id="disp-home-logo" src="sen.png" alt="Home Logo" onerror="handleImageError(this, 'HOME')">
       </div>
     </div>
   </div>
@@ -408,8 +396,17 @@
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
 
+    // Auto-fallback: tries .jpg if .png fails, then falls back to SVG crest
+    function handleImageError(img, fallbackText) {
+      if (img.src.endsWith(".png")) {
+        img.src = img.src.replace(".png", ".jpg");
+      } else {
+        img.src = createCrestBadge(fallbackText);
+      }
+    }
+
     /* ==========================================================
-       WEEK 4 FIELD MEL PRESETS
+       WEEK 4 FIELD MEL PRESETS (TARGETING PNG ASSETS)
        ========================================================== */
     const MEL_WEEK4_GAMES = [
       {
@@ -417,48 +414,48 @@
         time: "8:00 AM",
         awayName: "DIRTY BIRDS",
         homeName: "SENATORS",
-        awayLogo: "db.jpg",
-        homeLogo: "sen.jpg"
+        awayLogo: "db.png",
+        homeLogo: "sen.png"
       },
       {
         id: 2,
         time: "9:00 AM",
         awayName: "4TF",
         homeName: "TTP",
-        awayLogo: "4tf.jpg",
-        homeLogo: "ttp.jpg"
+        awayLogo: "4tf.png",
+        homeLogo: "ttp.png"
       },
       {
         id: 3,
         time: "10:00 AM",
         awayName: "SOB",
         homeName: "NEW WAVE",
-        awayLogo: "sob.jpg",
-        homeLogo: "nw.jpg"
+        awayLogo: "sob.png",
+        homeLogo: "nw.png"
       },
       {
         id: 4,
         time: "11:00 AM",
         awayName: "PITBULLS",
         homeName: "NIGHTMARE",
-        awayLogo: createCrestBadge("PB", "#475569"),
-        homeLogo: createCrestBadge("NM", "#0f172a")
+        awayLogo: "pb.png",
+        homeLogo: "nm.png"
       },
       {
         id: 5,
         time: "12:00 PM",
         awayName: "DUFFLEBAG BOYZ",
         homeName: "THUNDERCATS",
-        awayLogo: createCrestBadge("BB", "#0284c7"),
-        homeLogo: "tc.jpg"
+        awayLogo: "bb.png",
+        homeLogo: "tc.png"
       },
       {
         id: 6,
         time: "1:00 PM",
         awayName: "FALLEN ANGELS",
         homeName: "USUAL SUSPECTS",
-        awayLogo: "fa.jpg",
-        homeLogo: "us.jpg"
+        awayLogo: "fa.png",
+        homeLogo: "us.png"
       }
     ];
 
