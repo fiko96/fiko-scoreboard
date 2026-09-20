@@ -65,6 +65,27 @@
       z-index: 1;
     }
 
+    /* Dynamic Week / Header Badge (Covers old baked-in frame text) */
+    .banner-week-tag {
+      position: absolute;
+      top: 14%; /* Adjust up or down if needed to perfectly cover the old text */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0b0f19;
+      border: 1px solid rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+      color: #00f0ff;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      padding: 3px 14px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      z-index: 4;
+      white-space: nowrap;
+      user-select: none;
+    }
+
     /* Left Team Pod (Away Logo) */
     .banner-logo-slot.away {
       position: absolute;
@@ -154,7 +175,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
     }
@@ -180,6 +201,43 @@
       background-color: #22c55e;
       border-radius: 50%;
       box-shadow: 0 0 8px #22c55e;
+    }
+
+    .week-control-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .week-control-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .week-input {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      color: var(--accent-cyan);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 6px;
+      outline: none;
+      width: 100%;
+      max-width: 180px;
+    }
+
+    .week-input:focus {
+      border-color: var(--accent-cyan);
     }
 
     .section-label {
@@ -326,6 +384,9 @@
     <div class="banner-overlay-wrapper">
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
 
+      <!-- Dynamic Week Badge -->
+      <div class="banner-week-tag" id="disp-week-tag">WEEK 5</div>
+
       <!-- Left Team Logo -->
       <div class="banner-logo-slot away">
         <img id="disp-away-logo" src="ttp.png" alt="Away Logo" onerror="handleImageError(this, 'TTP')">
@@ -354,7 +415,13 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 5 • Field MEL)</div>
+    <!-- Live Banner Text Editor -->
+    <div class="week-control-bar">
+      <span class="week-control-label">Overlay Tag:</span>
+      <input type="text" class="week-input" id="ctrl-week-input" value="WEEK 5" oninput="handleWeekChange(this.value)">
+    </div>
+
+    <div class="section-label">Select Game (Field MEL)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
@@ -396,7 +463,6 @@
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
 
-    // Auto-fallback: tries .jpg if .png fails, then falls back to SVG crest
     function handleImageError(img, fallbackText) {
       if (img.src.endsWith(".png")) {
         img.src = img.src.replace(".png", ".jpg");
@@ -513,10 +579,12 @@
 
         currentHomeScore = val.homeScore ?? 0;
         currentAwayScore = val.awayScore ?? 0;
+        const currentWeekTag = val.weekTag || "WEEK 5";
 
         if (isDisplay) {
           document.getElementById('disp-away-score').textContent = currentAwayScore;
           document.getElementById('disp-home-score').textContent = currentHomeScore;
+          document.getElementById('disp-week-tag').textContent = currentWeekTag;
           if (val.awayLogo) document.getElementById('disp-away-logo').src = val.awayLogo;
           if (val.homeLogo) document.getElementById('disp-home-logo').src = val.homeLogo;
         } else {
@@ -524,6 +592,11 @@
           document.getElementById('ctrl-home-name').textContent = val.homeTeam || "HOME";
           document.getElementById('ctrl-away-score').textContent = currentAwayScore;
           document.getElementById('ctrl-home-score').textContent = currentHomeScore;
+          
+          const input = document.getElementById('ctrl-week-input');
+          if (input && document.activeElement !== input) {
+            input.value = currentWeekTag;
+          }
         }
       });
     }
@@ -561,6 +634,10 @@
         awayScore: 0,
         homeScore: 0
       });
+    }
+
+    function handleWeekChange(text) {
+      db.ref("/").update({ weekTag: text.toUpperCase() });
     }
 
     function changeScore(team, delta) {
