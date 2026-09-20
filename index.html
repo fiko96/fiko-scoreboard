@@ -241,59 +241,97 @@
     .score-columns {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 16px;
     }
 
     .team-controller {
       text-align: center;
       background: rgba(0, 0, 0, 0.25);
       border-radius: 8px;
-      padding: 16px;
+      padding: 16px 12px;
     }
 
     .ctrl-team-name {
       font-size: 15px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #e2e8f0;
       min-height: 20px;
     }
 
     .ctrl-score-value {
-      font-size: 54px;
+      font-size: 52px;
       font-weight: 900;
       color: #ffffff;
       margin-bottom: 12px;
     }
 
-    .btn-row {
+    /* Score Action Cluster */
+    .score-controls {
       display: flex;
+      flex-direction: column;
       gap: 8px;
-      justify-content: center;
     }
 
     .score-btn {
-      flex: 1;
-      padding: 12px 0;
+      padding: 11px 0;
       border: none;
       border-radius: 6px;
-      font-size: 18px;
       font-weight: 800;
       cursor: pointer;
       color: white;
-      transition: opacity 0.15s ease;
+      transition: opacity 0.15s ease, transform 0.05s ease;
+      user-select: none;
     }
 
     .score-btn:active {
-      opacity: 0.7;
+      opacity: 0.8;
+      transform: scale(0.97);
     }
 
-    .btn-plus {
-      background-color: #2563eb;
+    /* Primary Touchdown Button */
+    .btn-td {
+      background-color: #16a34a; /* Field Green */
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sub-row for XP & Safety */
+    .btn-sub-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .btn-xp {
+      background-color: #2563eb; /* Cobalt Blue */
+      font-size: 12px;
+      padding: 9px 0;
+    }
+
+    .btn-saf {
+      background-color: #7c3aed; /* Purple */
+      font-size: 12px;
+      padding: 9px 0;
+    }
+
+    /* Manual Adjustment Row */
+    .btn-adjust-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .btn-plus-small {
+      background-color: #334155;
+      font-size: 13px;
+      padding: 8px 0;
     }
 
     .btn-minus {
       background-color: #475569;
+      font-size: 13px;
+      padding: 8px 0;
     }
 
     .reset-btn {
@@ -359,23 +397,41 @@
 
     <div class="scoreboard-box">
       <div class="score-columns">
-        <!-- Away -->
+        <!-- Away Team Controller -->
         <div class="team-controller">
           <div class="ctrl-team-name" id="ctrl-away-name">TTP</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
-          <div class="btn-row">
-            <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
-            <button class="score-btn btn-plus" onclick="changeScore('away', 1)">+1</button>
+          
+          <div class="score-controls">
+            <button class="score-btn btn-td" onclick="changeScore('away', 6)">+6 TD</button>
+            <div class="btn-sub-row">
+              <button class="score-btn btn-xp" onclick="changeScore('away', 1)">+1 XP</button>
+              <button class="score-btn btn-xp" onclick="changeScore('away', 2)">+2 XP</button>
+              <button class="score-btn btn-saf" onclick="changeScore('away', 2)">+2 SAF</button>
+            </div>
+            <div class="btn-adjust-row">
+              <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
+              <button class="score-btn btn-plus-small" onclick="changeScore('away', 1)">+1</button>
+            </div>
           </div>
         </div>
 
-        <!-- Home -->
+        <!-- Home Team Controller -->
         <div class="team-controller">
           <div class="ctrl-team-name" id="ctrl-home-name">ALPHAS</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
-          <div class="btn-row">
-            <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
-            <button class="score-btn btn-plus" onclick="changeScore('home', 1)">+1</button>
+          
+          <div class="score-controls">
+            <button class="score-btn btn-td" onclick="changeScore('home', 6)">+6 TD</button>
+            <div class="btn-sub-row">
+              <button class="score-btn btn-xp" onclick="changeScore('home', 1)">+1 XP</button>
+              <button class="score-btn btn-xp" onclick="changeScore('home', 2)">+2 XP</button>
+              <button class="score-btn btn-saf" onclick="changeScore('home', 2)">+2 SAF</button>
+            </div>
+            <div class="btn-adjust-row">
+              <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
+              <button class="score-btn btn-plus-small" onclick="changeScore('home', 1)">+1</button>
+            </div>
           </div>
         </div>
       </div>
@@ -398,7 +454,6 @@
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
 
-    // Dynamic auto-fallback: tries .jpg, then renders the actual team name
     function handleImageError(img) {
       const teamName = img.dataset.team || img.alt || "TEAM";
       if (img.src.endsWith(".png")) {
