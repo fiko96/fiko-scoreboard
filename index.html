@@ -328,7 +328,7 @@
 
       <!-- Left Team Logo -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="db.png" alt="Away Logo" onerror="handleImageError(this, 'AWAY')">
+        <img id="disp-away-logo" src="ttp.png" alt="Away Logo" onerror="handleImageError(this, 'TTP')">
       </div>
 
       <!-- Away Score -->
@@ -339,7 +339,7 @@
 
       <!-- Right Team Logo -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="sen.png" alt="Home Logo" onerror="handleImageError(this, 'HOME')">
+        <img id="disp-home-logo" src="alphas.png" alt="Home Logo" onerror="handleImageError(this, 'ALPHAS')">
       </div>
     </div>
   </div>
@@ -354,14 +354,14 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 4 • Field MEL)</div>
+    <div class="section-label">Select Game (Week 5 • Field MEL)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">AWAY</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">TTP</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           <div class="btn-row">
             <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
@@ -371,7 +371,7 @@
 
         <!-- Home -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">HOME</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">ALPHAS</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           <div class="btn-row">
             <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
@@ -391,7 +391,7 @@
     function createCrestBadge(text, bgHex = "#1e293b", textHex = "#ffffff") {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="46" fill="${bgHex}" stroke="#ffffff" stroke-width="4"/>
-        <text x="50" y="58" font-size="32" font-family="Arial, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${text}</text>
+        <text x="50" y="58" font-size="28" font-family="Arial, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${text.slice(0, 4)}</text>
       </svg>`;
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
@@ -406,56 +406,56 @@
     }
 
     /* ==========================================================
-       WEEK 4 FIELD MEL PRESETS (TARGETING PNG ASSETS)
+       WEEK 5 FIELD MEL MATCHUPS
        ========================================================== */
-    const MEL_WEEK4_GAMES = [
+    const MEL_WEEK5_GAMES = [
       {
         id: 1,
         time: "8:00 AM",
-        awayName: "DIRTY BIRDS",
-        homeName: "SENATORS",
-        awayLogo: "db.png",
-        homeLogo: "sen.png"
+        awayName: "TTP",
+        homeName: "ALPHAS",
+        awayLogo: "ttp.png",
+        homeLogo: "alphas.png"
       },
       {
         id: 2,
         time: "9:00 AM",
         awayName: "4TF",
-        homeName: "TTP",
+        homeName: "NEW WAVE",
         awayLogo: "4tf.png",
-        homeLogo: "ttp.png"
+        homeLogo: "nw.png"
       },
       {
         id: 3,
         time: "10:00 AM",
-        awayName: "SOB",
-        homeName: "NEW WAVE",
-        awayLogo: "sob.png",
-        homeLogo: "nw.png"
+        awayName: "VGZ",
+        homeName: "REAPERS",
+        awayLogo: "vgz.png",
+        homeLogo: "reapers.png"
       },
       {
         id: 4,
         time: "11:00 AM",
-        awayName: "PITBULLS",
-        homeName: "NIGHTMARE",
-        awayLogo: "pb.png",
-        homeLogo: "nm.png"
+        awayName: "GRIZZLIES",
+        homeName: "GREMLINS",
+        awayLogo: "grizzlies.png",
+        homeLogo: "gremlins.png"
       },
       {
         id: 5,
         time: "12:00 PM",
-        awayName: "DUFFLEBAG BOYZ",
-        homeName: "THUNDERCATS",
-        awayLogo: "bb.png",
-        homeLogo: "tc.png"
+        awayName: "RED",
+        homeName: "PITBULLS",
+        awayLogo: "red.png",
+        homeLogo: "pb.png"
       },
       {
         id: 6,
         time: "1:00 PM",
-        awayName: "FALLEN ANGELS",
-        homeName: "USUAL SUSPECTS",
-        awayLogo: "fa.png",
-        homeLogo: "us.png"
+        awayName: "BB",
+        homeName: "NIGHTMARE",
+        awayLogo: "bb.png",
+        homeLogo: "nm.png"
       }
     ];
 
@@ -531,7 +531,7 @@
     function renderGameButtons() {
       const container = document.getElementById('game-buttons');
       container.innerHTML = "";
-      MEL_WEEK4_GAMES.forEach((g) => {
+      MEL_WEEK5_GAMES.forEach((g) => {
         const btn = document.createElement('button');
         btn.className = `game-btn ${g.id === activeGameId ? 'active' : ''}`;
         btn.id = `btn-game-${g.id}`;
@@ -550,7 +550,7 @@
       const activeBtn = document.getElementById(`btn-game-${id}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const match = MEL_WEEK4_GAMES.find(g => g.id === id);
+      const match = MEL_WEEK5_GAMES.find(g => g.id === id);
       if (!match) return;
 
       db.ref("/").update({
