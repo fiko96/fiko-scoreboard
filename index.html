@@ -328,7 +328,7 @@
 
       <!-- Left Team Logo -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="ttp.png" alt="Away Logo" onerror="handleImageError(this, 'TTP')">
+        <img id="disp-away-logo" src="ttp.png" alt="Away Logo" data-team="TTP" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -339,7 +339,7 @@
 
       <!-- Right Team Logo -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="alphas.png" alt="Home Logo" onerror="handleImageError(this, 'ALPHAS')">
+        <img id="disp-home-logo" src="alphas.png" alt="Home Logo" data-team="ALPHAS" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -388,20 +388,23 @@
   </div>
 
   <script>
-    function createCrestBadge(text, bgHex = "#1e293b", textHex = "#ffffff") {
+    function createCrestBadge(text, bgHex = "#161e2e", textHex = "#ffffff") {
+      const label = (text || "TEAM").trim();
+      const fontSize = label.length > 7 ? 15 : label.length > 4 ? 18 : 26;
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="46" fill="${bgHex}" stroke="#ffffff" stroke-width="4"/>
-        <text x="50" y="58" font-size="28" font-family="Arial, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${text.slice(0, 4)}</text>
+        <text x="50" y="58" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${label}</text>
       </svg>`;
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
 
-    // Auto-fallback: tries .jpg if .png fails, then falls back to SVG crest
-    function handleImageError(img, fallbackText) {
+    // Dynamic auto-fallback: tries .jpg, then renders the actual team name
+    function handleImageError(img) {
+      const teamName = img.dataset.team || img.alt || "TEAM";
       if (img.src.endsWith(".png")) {
         img.src = img.src.replace(".png", ".jpg");
-      } else {
-        img.src = createCrestBadge(fallbackText);
+      } else if (!img.src.startsWith("data:image")) {
+        img.src = createCrestBadge(teamName);
       }
     }
 
@@ -517,8 +520,17 @@
         if (isDisplay) {
           document.getElementById('disp-away-score').textContent = currentAwayScore;
           document.getElementById('disp-home-score').textContent = currentHomeScore;
-          if (val.awayLogo) document.getElementById('disp-away-logo').src = val.awayLogo;
-          if (val.homeLogo) document.getElementById('disp-home-logo').src = val.homeLogo;
+          
+          if (val.awayLogo) {
+            const el = document.getElementById('disp-away-logo');
+            el.dataset.team = val.awayTeam || "AWAY";
+            el.src = val.awayLogo;
+          }
+          if (val.homeLogo) {
+            const el = document.getElementById('disp-home-logo');
+            el.dataset.team = val.homeTeam || "HOME";
+            el.src = val.homeLogo;
+          }
         } else {
           document.getElementById('ctrl-away-name').textContent = val.awayTeam || "AWAY";
           document.getElementById('ctrl-home-name').textContent = val.homeTeam || "HOME";
