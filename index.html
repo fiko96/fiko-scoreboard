@@ -101,18 +101,19 @@
     }
 
     /* Scores */
+/* Left Digit Box (Away Score) */
     .banner-score.away {
       position: absolute;
-      left: 39.3%;
-      top: 36.5%;
-      width: 8.4%;
-      height: 27.5%;
+      left: 40.5%;        /* Increase to nudge RIGHT, decrease to nudge LEFT */
+      top: 38.0%;         /* Increase to nudge DOWN, decrease to nudge UP */
+      width: 7.5%;
+      height: 25.0%;
       z-index: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: "Impact", "Arial Black", sans-serif;
-      font-size: 50px;
+      font-size: 46px;    /* Adjust size if double digits get too tight */
       line-height: 1;
       font-weight: 900;
       color: #ffffff;
@@ -120,18 +121,19 @@
       user-select: none;
     }
 
+    /* Right Digit Box (Home Score) */
     .banner-score.home {
       position: absolute;
-      left: 52.3%;
-      top: 36.5%;
-      width: 8.4%;
-      height: 27.5%;
+      left: 52.0%;        /* Increase to nudge RIGHT, decrease to nudge LEFT */
+      top: 38.0%;         /* Increase to nudge DOWN, decrease to nudge UP */
+      width: 7.5%;
+      height: 25.0%;
       z-index: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: "Impact", "Arial Black", sans-serif;
-      font-size: 50px;
+      font-size: 46px;
       line-height: 1;
       font-weight: 900;
       color: #ffffff;
