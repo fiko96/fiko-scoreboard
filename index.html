@@ -162,35 +162,30 @@
     }
 
     /* ==========================================================
-       CONTROLLER INTERFACE & CHAT DOCK (Tablet Layout)
+       CONTROLLER INTERFACE
        ========================================================== */
     #controller-container {
       background-color: var(--bg-dark);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      padding: 20px;
+      max-width: 760px;
+      margin: 0 auto;
       overflow-y: auto;
     }
 
-    .controller-top-bar {
+    .controller-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      background: #111726;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
     }
 
     .controller-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
       letter-spacing: 0.5px;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
     }
 
     .live-status {
@@ -210,104 +205,6 @@
       box-shadow: 0 0 8px #22c55e;
     }
 
-    .btn-toggle-chat {
-      background: var(--panel-bg);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* Main Flex Workspace */
-    .workspace-layout {
-      display: flex;
-      flex: 1;
-      width: 100%;
-      height: calc(100vh - 54px);
-    }
-
-    .score-pane {
-      flex: 1;
-      padding: 18px 20px;
-      overflow-y: auto;
-      max-width: 840px;
-      margin: 0 auto;
-    }
-
-    /* Side Chat Dock */
-    .chat-pane {
-      width: 380px;
-      background: #101624;
-      border-left: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      transition: width 0.2s ease;
-    }
-
-    .chat-pane.hidden {
-      display: none;
-    }
-
-    .chat-header {
-      padding: 10px 14px;
-      background: #161e2e;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .chat-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chat-header-title {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-    }
-
-    .chat-url-box {
-      display: flex;
-      gap: 6px;
-    }
-
-    .chat-input {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      font-size: 11px;
-      padding: 5px 8px;
-      border-radius: 4px;
-      outline: none;
-    }
-
-    .chat-load-btn {
-      background: #2563eb;
-      border: none;
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .chat-frame {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: #0b0f19;
-    }
-
     .section-label {
       font-size: 12px;
       text-transform: uppercase;
@@ -319,9 +216,9 @@
 
     .game-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .game-btn {
@@ -329,7 +226,7 @@
       border: 1px solid var(--border-color);
       color: var(--text-main);
       border-radius: 8px;
-      padding: 10px;
+      padding: 12px;
       cursor: pointer;
       text-align: left;
       transition: all 0.15s ease;
@@ -360,8 +257,8 @@
       background: var(--panel-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
     }
 
     .score-columns {
@@ -374,7 +271,7 @@
       text-align: center;
       background: rgba(0, 0, 0, 0.25);
       border-radius: 8px;
-      padding: 14px 10px;
+      padding: 16px 12px;
     }
 
     .ctrl-team-name {
@@ -386,10 +283,10 @@
     }
 
     .ctrl-score-value {
-      font-size: 48px;
+      font-size: 52px;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .score-controls {
@@ -399,7 +296,7 @@
     }
 
     .score-btn {
-      padding: 10px 0;
+      padding: 11px 0;
       border: none;
       border-radius: 6px;
       font-weight: 800;
@@ -458,24 +355,24 @@
 
     .reset-btn {
       width: 100%;
-      margin-top: 14px;
-      padding: 12px;
+      margin-top: 16px;
+      padding: 14px;
       background-color: #dc2626;
       border: none;
       border-radius: 8px;
       color: white;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       letter-spacing: 0.5px;
       cursor: pointer;
     }
 
     .shortcuts-note {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
       text-align: center;
-      margin-top: 12px;
-      line-height: 1.4;
+      margin-top: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -487,7 +384,7 @@
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
       <div class="banner-week-tag">WEEK 6</div>
 
-      <!-- Left Team Logo (Default Game 1 Away) -->
+      <!-- Left Team Logo -->
       <div class="banner-logo-slot away">
         <img id="disp-away-logo" src="4tf.png" alt="Away Logo" data-team="4TF" onerror="handleImageError(this)">
       </div>
@@ -498,7 +395,7 @@
       <!-- Home Score -->
       <div class="banner-score home" id="disp-home-score">0</div>
 
-      <!-- Right Team Logo (Default Game 1 Home) -->
+      <!-- Right Team Logo -->
       <div class="banner-logo-slot home">
         <img id="disp-home-logo" src="vgz.png" alt="Home Logo" data-team="VGZ" onerror="handleImageError(this)">
       </div>
@@ -507,83 +404,61 @@
 
   <!-- ================= CONTROLLER INTERFACE ================= -->
   <div id="controller-container">
-    <div class="controller-top-bar">
-      <div class="controller-title">FiKo Scoreboard</div>
-      <div class="top-actions">
-        <div class="live-status" id="connection-status">
-          <div class="status-dot"></div>
-          <span>CONNECTING...</span>
-        </div>
-        <button class="btn-toggle-chat" onclick="toggleChatPane()">TOGGLE CHAT</button>
+    <div class="controller-header">
+      <div class="controller-title">FiKo Scoreboard Controller</div>
+      <div class="live-status" id="connection-status">
+        <div class="status-dot"></div>
+        <span>CONNECTING...</span>
       </div>
     </div>
 
-    <div class="workspace-layout">
-      <!-- Left: Scoreboard Panel -->
-      <div class="score-pane">
-        <div class="section-label">Select Game (Week 6 • Serpico Field)</div>
-        <div class="game-grid" id="game-buttons"></div>
+    <div class="section-label">Select Game (Week 6 • Serpico Field)</div>
+    <div class="game-grid" id="game-buttons"></div>
 
-        <div class="scoreboard-box">
-          <div class="score-columns">
-            <!-- Away Team -->
-            <div class="team-controller">
-              <div class="ctrl-team-name" id="ctrl-away-name">4TF</div>
-              <div class="ctrl-score-value" id="ctrl-away-score">0</div>
-              
-              <div class="score-controls">
-                <button class="score-btn btn-td" onclick="changeScore('away', 6)">+6 TD</button>
-                <div class="btn-sub-row">
-                  <button class="score-btn btn-xp" onclick="changeScore('away', 1)">+1 XP</button>
-                  <button class="score-btn btn-xp" onclick="changeScore('away', 2)">+2 XP</button>
-                  <button class="score-btn btn-saf" onclick="changeScore('away', 2)">+2 SAF</button>
-                </div>
-                <div class="btn-adjust-row">
-                  <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
-                  <button class="score-btn btn-plus-small" onclick="changeScore('away', 1)">+1</button>
-                </div>
-              </div>
+    <div class="scoreboard-box">
+      <div class="score-columns">
+        <!-- Away Team -->
+        <div class="team-controller">
+          <div class="ctrl-team-name" id="ctrl-away-name">4TF</div>
+          <div class="ctrl-score-value" id="ctrl-away-score">0</div>
+          
+          <div class="score-controls">
+            <button class="score-btn btn-td" onclick="changeScore('away', 6)">+6 TD</button>
+            <div class="btn-sub-row">
+              <button class="score-btn btn-xp" onclick="changeScore('away', 1)">+1 XP</button>
+              <button class="score-btn btn-xp" onclick="changeScore('away', 2)">+2 XP</button>
+              <button class="score-btn btn-saf" onclick="changeScore('away', 2)">+2 SAF</button>
             </div>
-
-            <!-- Home Team -->
-            <div class="team-controller">
-              <div class="ctrl-team-name" id="ctrl-home-name">VGZ</div>
-              <div class="ctrl-score-value" id="ctrl-home-score">0</div>
-              
-              <div class="score-controls">
-                <button class="score-btn btn-td" onclick="changeScore('home', 6)">+6 TD</button>
-                <div class="btn-sub-row">
-                  <button class="score-btn btn-xp" onclick="changeScore('home', 1)">+1 XP</button>
-                  <button class="score-btn btn-xp" onclick="changeScore('home', 2)">+2 XP</button>
-                  <button class="score-btn btn-saf" onclick="changeScore('home', 2)">+2 SAF</button>
-                </div>
-                <div class="btn-adjust-row">
-                  <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
-                  <button class="score-btn btn-plus-small" onclick="changeScore('home', 1)">+1</button>
-                </div>
-              </div>
+            <div class="btn-adjust-row">
+              <button class="score-btn btn-minus" onclick="changeScore('away', -1)">-1</button>
+              <button class="score-btn btn-plus-small" onclick="changeScore('away', 1)">+1</button>
             </div>
           </div>
+        </div>
 
-          <button class="reset-btn" onclick="resetScores()">RESET SCORE (0 - 0)</button>
-          <div class="shortcuts-note">
-            Hotkeys: <b>+ / =</b> (Home +1) | <b>-</b> (Home -1) | <b>]</b> (Away +1) | <b>[</b> (Away -1)
+        <!-- Home Team -->
+        <div class="team-controller">
+          <div class="ctrl-team-name" id="ctrl-home-name">VGZ</div>
+          <div class="ctrl-score-value" id="ctrl-home-score">0</div>
+          
+          <div class="score-controls">
+            <button class="score-btn btn-td" onclick="changeScore('home', 6)">+6 TD</button>
+            <div class="btn-sub-row">
+              <button class="score-btn btn-xp" onclick="changeScore('home', 1)">+1 XP</button>
+              <button class="score-btn btn-xp" onclick="changeScore('home', 2)">+2 XP</button>
+              <button class="score-btn btn-saf" onclick="changeScore('home', 2)">+2 SAF</button>
+            </div>
+            <div class="btn-adjust-row">
+              <button class="score-btn btn-minus" onclick="changeScore('home', -1)">-1</button>
+              <button class="score-btn btn-plus-small" onclick="changeScore('home', 1)">+1</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Right: Live Chat Dock -->
-      <div class="chat-pane" id="chat-dock">
-        <div class="chat-header">
-          <div class="chat-header-row">
-            <span class="chat-header-title">Stream Chat Dock</span>
-          </div>
-          <div class="chat-url-box">
-            <input type="text" id="chat-url-input" class="chat-input" placeholder="Paste Embed Chat URL (e.g. Restream/Ninja)...">
-            <button class="chat-load-btn" onclick="loadChatUrl()">Load</button>
-          </div>
-        </div>
-        <iframe id="live-chat-iframe" class="chat-frame" src="about:blank"></iframe>
+      <button class="reset-btn" onclick="resetScores()">RESET SCORE (0 - 0)</button>
+      <div class="shortcuts-note">
+        Keyboard Shortcuts: <b>+ / =</b> (Home +1) | <b>-</b> (Home -1) | <b>]</b> (Away +1) | <b>[</b> (Away -1)
       </div>
     </div>
   </div>
@@ -684,9 +559,8 @@
       document.body.style.backgroundColor = 'transparent';
     } else {
       document.getElementById('display-container').style.display = 'none';
-      document.getElementById('controller-container').style.display = 'flex';
+      document.getElementById('controller-container').style.display = 'block';
       renderGameButtons();
-      initSavedChat();
     }
 
     auth.signInAnonymously()
@@ -781,27 +655,6 @@
     function resetScores() {
       if (confirm("Reset scores to 0 - 0?")) {
         db.ref("/").update({ homeScore: 0, awayScore: 0 });
-      }
-    }
-
-    function toggleChatPane() {
-      const dock = document.getElementById('chat-dock');
-      dock.classList.toggle('hidden');
-    }
-
-    function loadChatUrl() {
-      const url = document.getElementById('chat-url-input').value.trim();
-      if (url) {
-        document.getElementById('live-chat-iframe').src = url;
-        localStorage.setItem('fiko_chat_url', url);
-      }
-    }
-
-    function initSavedChat() {
-      const saved = localStorage.getItem('fiko_chat_url');
-      if (saved) {
-        document.getElementById('chat-url-input').value = saved;
-        document.getElementById('live-chat-iframe').src = saved;
       }
     }
 
