@@ -51,10 +51,9 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      width: 865px;
-      height: 289px;
-      max-width: 95vw; /* Prevents overflow on narrow screens */
-      transform-origin: top center;
+      width: 880px;
+      height: 285px;
+      max-width: 96vw;
     }
 
     .banner-frame-bg {
@@ -65,6 +64,30 @@
       height: 100%;
       object-fit: contain;
       z-index: 1;
+    }
+
+    /* Dynamic Week Overlay Tag */
+    .banner-week-tag {
+      position: absolute;
+      top: 70.5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #091322;
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.95);
+      color: #ffffff;
+      font-family: "Impact", "Arial Black", sans-serif;
+      font-style: italic;
+      font-size: 19px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 4px 18px;
+      border-radius: 4px;
+      z-index: 4;
+      user-select: none;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8), 1px 1px 3px #000000;
+      white-space: nowrap;
     }
 
     /* Left Team Pod (Away Logo) */
@@ -100,20 +123,19 @@
       border-radius: 50%;
     }
 
-    /* Scores */
-/* Left Digit Box (Away Score) */
+    /* Away Score Digit Box */
     .banner-score.away {
       position: absolute;
-      left: 40.5%;        /* Increase to nudge RIGHT, decrease to nudge LEFT */
-      top: 38.0%;         /* Increase to nudge DOWN, decrease to nudge UP */
-      width: 7.5%;
-      height: 25.0%;
+      left: 40.0%;
+      top: 37.5%;
+      width: 8.0%;
+      height: 26.0%;
       z-index: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: "Impact", "Arial Black", sans-serif;
-      font-size: 46px;    /* Adjust size if double digits get too tight */
+      font-size: 48px;
       line-height: 1;
       font-weight: 900;
       color: #ffffff;
@@ -121,19 +143,19 @@
       user-select: none;
     }
 
-    /* Right Digit Box (Home Score) */
+    /* Home Score Digit Box */
     .banner-score.home {
       position: absolute;
-      left: 54.5%;        /* Increase to nudge RIGHT, decrease to nudge LEFT */
-      top: 38.0%;         /* Increase to nudge DOWN, decrease to nudge UP */
-      width: 7.5%;
-      height: 25.0%;
+      left: 52.0%;
+      top: 37.5%;
+      width: 8.0%;
+      height: 26.0%;
       z-index: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: "Impact", "Arial Black", sans-serif;
-      font-size: 46px;
+      font-size: 48px;
       line-height: 1;
       font-weight: 900;
       color: #ffffff;
@@ -362,11 +384,11 @@
   <div id="display-container">
     <div class="banner-overlay-wrapper">
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
-      <div class="banner-week-tag">WEEK 6</div>
+      <div class="banner-week-tag">WEEK 8</div>
 
-      <!-- Left Team Logo -->
+      <!-- Left Team Logo (Default Game 1 Away) -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="4tf.png" alt="Away Logo" data-team="4TF" onerror="handleImageError(this)">
+        <img id="disp-away-logo" src="ducks.png" alt="Away Logo" data-team="DUCKS" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -375,9 +397,9 @@
       <!-- Home Score -->
       <div class="banner-score home" id="disp-home-score">0</div>
 
-      <!-- Right Team Logo -->
+      <!-- Right Team Logo (Default Game 1 Home) -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="vgz.png" alt="Home Logo" data-team="VGZ" onerror="handleImageError(this)">
+        <img id="disp-home-logo" src="dirtybirds.png" alt="Home Logo" data-team="DIRTY BIRDS" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -392,14 +414,14 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 6 • Serpico Field)</div>
+    <div class="section-label">Select Game (Week 8 • Serpico Field)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away Team -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">4TF</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">DUCKS</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           
           <div class="score-controls">
@@ -418,7 +440,7 @@
 
         <!-- Home Team -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">VGZ</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">DIRTY BIRDS</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           
           <div class="score-controls">
@@ -464,48 +486,48 @@
     }
 
     /* ==========================================================
-       SERPICO FIELD MATCHUPS
+       WEEK 8 SERPICO FIELD MATCHUPS
        ========================================================== */
-    const MEL_WEEK5_GAMES = [
+    const MEL_WEEK8_GAMES = [
       {
         id: 1,
         time: "8:00 AM",
-        awayName: "4TF",
-        homeName: "VGZ",
-        awayLogo: "4tf.png",
-        homeLogo: "vgz.png"
+        awayName: "DUCKS",
+        homeName: "DIRTY BIRDS",
+        awayLogo: "ducks.png",
+        homeLogo: "dirtybirds.png"
       },
       {
         id: 2,
         time: "9:00 AM",
-        awayName: "BLUB BLUB",
-        homeName: "SOB",
-        awayLogo: "bl.png",
-        homeLogo: "sob.png"
+        awayName: "SOB",
+        homeName: "TTP",
+        awayLogo: "sob.png",
+        homeLogo: "ttp.png"
       },
       {
         id: 3,
         time: "10:00 AM",
-        awayName: "BLUB BLUB",
-        homeName: "ALPHAS",
-        awayLogo: "bl.png",
-        homeLogo: "alphas.png"
+        awayName: "ALPHAS",
+        homeName: "VGZ",
+        awayLogo: "alphas.png",
+        homeLogo: "vgz.png"
       },
       {
         id: 4,
         time: "11:00 AM",
-        awayName: "REAPERS",
-        homeName: "ALPHAS",
-        awayLogo: "reapers.png",
-        homeLogo: "alphas.png"
+        awayName: "HONEY BADGERS",
+        homeName: "SENATORS",
+        awayLogo: "badgers.png",
+        homeLogo: "sen.png"
       },
       {
         id: 5,
         time: "12:00 PM",
-        awayName: "REAPERS",
-        homeName: "NEW WAVE",
-        awayLogo: "reapers.png",
-        homeLogo: "nw.png"
+        awayName: "DUFFLE BAGGBOYZ",
+        homeName: "GRIZZLIES",
+        awayLogo: "dbb.png",
+        homeLogo: "grizzlies.png"
       }
     ];
 
@@ -590,7 +612,7 @@
     function renderGameButtons() {
       const container = document.getElementById('game-buttons');
       container.innerHTML = "";
-      MEL_WEEK5_GAMES.forEach((g) => {
+      MEL_WEEK8_GAMES.forEach((g) => {
         const btn = document.createElement('button');
         btn.className = `game-btn ${g.id === activeGameId ? 'active' : ''}`;
         btn.id = `btn-game-${g.id}`;
@@ -609,7 +631,7 @@
       const activeBtn = document.getElementById(`btn-game-${id}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const match = MEL_WEEK5_GAMES.find(g => g.id === id);
+      const match = MEL_WEEK8_GAMES.find(g => g.id === id);
       if (!match) return;
 
       db.ref("/").update({
