@@ -66,7 +66,7 @@
       z-index: 1;
     }
 
-    /* Left Team Pod (Away Logo) */
+    /* Left Team Pod */
     .banner-logo-slot.away {
       position: absolute;
       left: 8.5%;
@@ -79,7 +79,7 @@
       z-index: 3;
     }
 
-    /* Right Team Pod (Home Logo) */
+    /* Right Team Pod */
     .banner-logo-slot.home {
       position: absolute;
       left: 67.0%;
@@ -99,14 +99,11 @@
       border-radius: 50%;
     }
 
-    /* ==========================================
-       SCORE POSITIONING CONTROLS
-       ========================================== */
-    /* Away Score Digit Box (Left Team) */
+    /* Left Digit Box (Away Score) */
     .banner-score.away {
       position: absolute;
-      left: 40.0%;        /* <-- Adjust Left / Right */
-      top: 37.5%;         /* <-- Adjust Up / Down */
+      left: 40.0%;
+      top: 37.5%;
       width: 8.0%;
       height: 26.0%;
       z-index: 3;
@@ -122,11 +119,11 @@
       user-select: none;
     }
 
-    /* Home Score Digit Box (Right Team) */
+    /* Right Digit Box (Home Score) */
     .banner-score.home {
       position: absolute;
-      left: 52.0%;        /* <-- Adjust Left / Right */
-      top: 37.5%;         /* <-- Adjust Up / Down */
+      left: 52.0%;
+      top: 37.5%;
       width: 8.0%;
       height: 26.0%;
       z-index: 3;
@@ -364,7 +361,7 @@
     <div class="banner-overlay-wrapper">
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
 
-      <!-- Left Team Logo (Default Game 1 Away) -->
+      <!-- Left Team Logo -->
       <div class="banner-logo-slot away">
         <img id="disp-away-logo" src="ducks.png" alt="Away Logo" data-team="DUCKS" onerror="handleImageError(this)">
       </div>
@@ -375,7 +372,7 @@
       <!-- Home Score -->
       <div class="banner-score home" id="disp-home-score">0</div>
 
-      <!-- Right Team Logo (Default Game 1 Home) -->
+      <!-- Right Team Logo -->
       <div class="banner-logo-slot home">
         <img id="disp-home-logo" src="db.png" alt="Home Logo" data-team="DIRTY BIRDS" onerror="handleImageError(this)">
       </div>
@@ -397,7 +394,7 @@
 
     <div class="scoreboard-box">
       <div class="score-columns">
-        <!-- Away Team -->
+        <!-- Away Team Controller -->
         <div class="team-controller">
           <div class="ctrl-team-name" id="ctrl-away-name">DUCKS</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
@@ -416,7 +413,7 @@
           </div>
         </div>
 
-        <!-- Home Team -->
+        <!-- Home Team Controller -->
         <div class="team-controller">
           <div class="ctrl-team-name" id="ctrl-home-name">DIRTY BIRDS</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
@@ -464,187 +461,18 @@
     }
 
     /* ==========================================================
-       WEEK 8 SERPICO FIELD MATCHUPS
+       MASTER TEAM LOGO DIRECTORY (1 Logo Per Team)
        ========================================================== */
-    const MEL_WEEK8_GAMES = [
-      {
-        id: 1,
-        time: "8:00 AM",
-        awayName: "DUCKS",
-        homeName: "DIRTY BIRDS",
-        awayLogo: "ducks.png",
-        homeLogo: "db.png"
-      },
-      {
-        id: 2,
-        time: "9:00 AM",
-        awayName: "SOB",
-        homeName: "TTP",
-        awayLogo: "sob.png",
-        homeLogo: "ttp.png"
-      },
-      {
-        id: 3,
-        time: "10:00 AM",
-        awayName: "ALPHAS",
-        homeName: "VGZ",
-        awayLogo: "alphas.png",
-        homeLogo: "vgz.png"
-      },
-      {
-        id: 4,
-        time: "11:00 AM",
-        awayName: "HONEY BADGERS",
-        homeName: "SENATORS",
-        awayLogo: "bdg.png",
-        homeLogo: "sen.png"
-      },
-      {
-        id: 5,
-        time: "12:00 PM",
-        awayName: "DUFFLE BAGGBOYZ",
-        homeName: "GRIZZLIES",
-        awayLogo: "bb.png",
-        homeLogo: "grizzlies.png"
-      }
-    ];
-
-    /* ==========================================================
-       FIREBASE CONFIG
-       ========================================================== */
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZKiu4pb9qh_pwG3z8NJdB6siQ6pyPtc4",
-      authDomain: "fiko-scoreboard.firebaseapp.com",
-      databaseURL: "https://fiko-scoreboard-default-rtdb.firebaseio.com",
-      projectId: "fiko-scoreboard",
-      storageBucket: "fiko-scoreboard.firebasestorage.app",
-      messagingSenderId: "829447749880",
-      appId: "1:829447749880:web:c7532983c2543911fbfb0d"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const isDisplay = urlParams.get('mode') === 'display';
-
-    let currentHomeScore = 0;
-    let currentAwayScore = 0;
-    let activeGameId = 1;
-
-    if (isDisplay) {
-      document.getElementById('display-container').style.display = 'block';
-      document.getElementById('controller-container').style.display = 'none';
-      document.body.style.backgroundColor = 'transparent';
-    } else {
-      document.getElementById('display-container').style.display = 'none';
-      document.getElementById('controller-container').style.display = 'block';
-      renderGameButtons();
-    }
-
-    auth.signInAnonymously()
-      .then(() => {
-        const statusElem = document.getElementById('connection-status');
-        if (statusElem) {
-          statusElem.innerHTML = '<div class="status-dot"></div><span>LIVE • CONNECTED</span>';
-          statusElem.style.color = '#22c55e';
-        }
-        listenToDatabase();
-      })
-      .catch((err) => {
-        console.error("Auth error:", err);
-      });
-
-    function listenToDatabase() {
-      db.ref("/").on("value", (snapshot) => {
-        const val = snapshot.val();
-        if (!val) return;
-
-        currentHomeScore = val.homeScore ?? 0;
-        currentAwayScore = val.awayScore ?? 0;
-
-        if (isDisplay) {
-          document.getElementById('disp-away-score').textContent = currentAwayScore;
-          document.getElementById('disp-home-score').textContent = currentHomeScore;
-          
-          if (val.awayLogo) {
-            const el = document.getElementById('disp-away-logo');
-            el.dataset.team = val.awayTeam || "AWAY";
-            el.src = val.awayLogo;
-          }
-          if (val.homeLogo) {
-            const el = document.getElementById('disp-home-logo');
-            el.dataset.team = val.homeTeam || "HOME";
-            el.src = val.homeLogo;
-          }
-        } else {
-          document.getElementById('ctrl-away-name').textContent = val.awayTeam || "AWAY";
-          document.getElementById('ctrl-home-name').textContent = val.homeTeam || "HOME";
-          document.getElementById('ctrl-away-score').textContent = currentAwayScore;
-          document.getElementById('ctrl-home-score').textContent = currentHomeScore;
-        }
-      });
-    }
-
-    function renderGameButtons() {
-      const container = document.getElementById('game-buttons');
-      container.innerHTML = "";
-      MEL_WEEK8_GAMES.forEach((g) => {
-        const btn = document.createElement('button');
-        btn.className = `game-btn ${g.id === activeGameId ? 'active' : ''}`;
-        btn.id = `btn-game-${g.id}`;
-        btn.onclick = () => selectGame(g.id);
-        btn.innerHTML = `
-          <div class="game-btn-time">Game ${g.id} • ${g.time}</div>
-          <div class="game-btn-match">${g.awayName} vs ${g.homeName}</div>
-        `;
-        container.appendChild(btn);
-      });
-    }
-
-    function selectGame(id) {
-      activeGameId = id;
-      document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = document.getElementById(`btn-game-${id}`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const match = MEL_WEEK8_GAMES.find(g => g.id === id);
-      if (!match) return;
-
-      db.ref("/").update({
-        awayTeam: match.awayName,
-        homeTeam: match.homeName,
-        awayLogo: match.awayLogo,
-        homeLogo: match.homeLogo,
-        awayScore: 0,
-        homeScore: 0
-      });
-    }
-
-    function changeScore(team, delta) {
-      if (team === 'home') {
-        const newScore = Math.max(0, currentHomeScore + delta);
-        db.ref("/").update({ homeScore: newScore });
-      } else {
-        const newScore = Math.max(0, currentAwayScore + delta);
-        db.ref("/").update({ awayScore: newScore });
-      }
-    }
-
-    function resetScores() {
-      if (confirm("Reset scores to 0 - 0?")) {
-        db.ref("/").update({ homeScore: 0, awayScore: 0 });
-      }
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (isDisplay) return;
-      if (e.key === '=' || e.key === '+') changeScore('home', 1);
-      if (e.key === '-' || e.key === '_') changeScore('home', -1);
-      if (e.key === ']') changeScore('away', 1);
-      if (e.key === '[') changeScore('away', -1);
-    });
-  </script>
-</body>
-</html>
+    const TEAM_LOGOS = {
+      "DUCKS": "ducks.png",
+      "DIRTY BIRDS": "db.png",
+      "SOB": "sob.png",
+      "TTP": "ttp.png",
+      "ALPHAS": "alphas.png",
+      "VGZ": "vgz.png",
+      "HONEY BADGERS": "bdg.png",
+      "SENATORS": "sen.png",
+      "DUFFLE BAGGBOYZ": "bb.png",
+      "GRIZZLIES": "grizzlies.png",
+      "4TF
+        
