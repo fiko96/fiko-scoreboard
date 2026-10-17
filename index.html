@@ -361,9 +361,9 @@
     <div class="banner-overlay-wrapper">
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
 
-      <!-- Left Team Logo -->
+      <!-- Left Team Logo (Default Game 1 Away) -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="ducks.png" alt="Away Logo" data-team="DUCKS" onerror="handleImageError(this)">
+        <img id="disp-away-logo" src="vgz.png" alt="Away Logo" data-team="VGZ" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -372,9 +372,9 @@
       <!-- Home Score -->
       <div class="banner-score home" id="disp-home-score">0</div>
 
-      <!-- Right Team Logo -->
+      <!-- Right Team Logo (Default Game 1 Home) -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="db.png" alt="Home Logo" data-team="DIRTY BIRDS" onerror="handleImageError(this)">
+        <img id="disp-home-logo" src="bl.png" alt="Home Logo" data-team="BLUB BLUB" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -389,14 +389,14 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 8 • Serpico Field)</div>
+    <div class="section-label">Select Game (Week 9 • Serpico Field)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">DUCKS</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">VGZ</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           
           <div class="score-controls">
@@ -415,7 +415,7 @@
 
         <!-- Home Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">DIRTY BIRDS</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">BLUB BLUB</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           
           <div class="score-controls">
@@ -461,23 +461,23 @@
     }
 
     /* ==========================================================
-       MASTER TEAM LOGO DIRECTORY (1 Logo Per Team)
+       MASTER TEAM LOGO DIRECTORY
        ========================================================== */
     const TEAM_LOGOS = {
-      "DUCKS": "ducks.png",
-      "DIRTY BIRDS": "db.png",
-      "SOB": "sob.png",
-      "TTP": "ttp.png",
-      "ALPHAS": "alphas.png",
       "VGZ": "vgz.png",
-      "HONEY BADGERS": "bdg.png",
-      "SENATORS": "sen.png",
-      "DUFFLE BAGGBOYZ": "dbb.png",
-      "GRIZZLIES": "grizzlies.png",
-      "4TF": "4tf.png",
       "BLUB BLUB": "bl.png",
       "REAPERS": "reapers.png",
       "NEW WAVE": "nw.png",
+      "4TF": "4tf.png",
+      "DUCKS": "ducks.png",
+      "SENATORS": "sen.png",
+      "ALPHAS": "alphas.png",
+      "TTP": "ttp.png",
+      "DIRTY BIRDS": "db.png",
+      "SOB": "sob.png",
+      "HONEY BADGERS": "bdg.png",
+      "DUFFLE BAGGBOYZ": "dbb.png",
+      "GRIZZLIES": "grizzlies.png",
       "WILDBOYZ": "wb.png",
       "CL": "cl.png",
       "PITBULLS": "pb.png",
@@ -489,14 +489,14 @@
     }
 
     /* ==========================================================
-       WEEK 8 MATCHUPS
+       WEEK 9 MATCHUPS (SERPICO FIELD)
        ========================================================== */
     const WEEK_GAMES = [
-      { id: 1, time: "8:00 AM",  away: "DUCKS",           home: "DIRTY BIRDS" },
-      { id: 2, time: "9:00 AM",  away: "SOB",             home: "TTP" },
-      { id: 3, time: "10:00 AM", away: "ALPHAS",          home: "VGZ" },
-      { id: 4, time: "11:00 AM", away: "HONEY BADGERS",   home: "SENATORS" },
-      { id: 5, time: "12:00 PM", away: "DUFFLE BAGGBOYZ", home: "GRIZZLIES" }
+      { id: 1, time: "8:00 AM",  away: "VGZ",      home: "BLUB BLUB" },
+      { id: 2, time: "9:00 AM",  away: "VGZ",      home: "REAPERS" },
+      { id: 3, time: "10:00 AM", away: "NEW WAVE", home: "4TF" },
+      { id: 4, time: "11:00 AM", away: "DUCKS",    home: "SENATORS" },
+      { id: 5, time: "12:00 PM", away: "ALPHAS",   home: "TTP" }
     ];
 
     /* ==========================================================
