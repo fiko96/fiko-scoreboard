@@ -441,12 +441,36 @@
   </div>
 
   <script>
-    function createCrestBadge(text, bgHex = "#161e2e", textHex = "#ffffff") {
-      const label = (text || "TEAM").trim();
-      const fontSize = label.length > 7 ? 15 : label.length > 4 ? 18 : 26;
+    function createCrestBadge(text, bgHex = "#161e2e", textHex = "#ffffff", strokeHex = "#ffffff") {
+      const label = (text || "TEAM").trim().toUpperCase();
+      if (label === "RED EYE") {
+        bgHex = "#22060a";
+        strokeHex = "#ff334b";
+      } else if (label === "METAL MILITIA") {
+        bgHex = "#141820";
+        strokeHex = "#94a3b8";
+      }
+
+      const words = label.split(/\s+/);
+      let textElements = "";
+
+      if (words.length >= 2) {
+        const line1 = words[0];
+        const line2 = words.slice(1).join(" ");
+        const maxLen = Math.max(line1.length, line2.length);
+        const fontSize = maxLen > 6 ? 15 : maxLen > 4 ? 19 : 22;
+        textElements = `
+          <text x="50" y="45" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${line1}</text>
+          <text x="50" y="67" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${line2}</text>
+        `;
+      } else {
+        const fontSize = label.length > 7 ? 15 : label.length > 4 ? 18 : 26;
+        textElements = `<text x="50" y="58" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${label}</text>`;
+      }
+
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="46" fill="${bgHex}" stroke="#ffffff" stroke-width="4"/>
-        <text x="50" y="58" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${label}</text>
+        <circle cx="50" cy="50" r="46" fill="${bgHex}" stroke="${strokeHex}" stroke-width="4"/>
+        ${textElements}
       </svg>`;
       return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
     }
@@ -465,9 +489,9 @@
        ========================================================== */
     const TEAM_LOGOS = {
       "DUFFLE BAGGBOYZ": "dbb.png",
-      "RED EYE": "redeye.png",
+      "RED EYE": createCrestBadge("RED EYE"),
       "GRIZZLIES": "grizzlies.png",
-      "METAL MILITIA": "mm.png",
+      "METAL MILITIA": createCrestBadge("METAL MILITIA"),
       "WILDBOYZ": "wb.png",
       "HONEY BADGERS": "bdg.png",
       "CL": "cl.png",
@@ -489,7 +513,7 @@
     };
 
     function getLogo(teamName) {
-      return TEAM_LOGOS[teamName] || "";
+      return TEAM_LOGOS[teamName] || createCrestBadge(teamName);
     }
 
     /* ==========================================================
