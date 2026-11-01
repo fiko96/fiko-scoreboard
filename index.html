@@ -363,7 +363,7 @@
 
       <!-- Left Team Logo (Default Game 1 Away) -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="sob.png" alt="Away Logo" data-team="SOB" onerror="handleImageError(this)">
+        <img id="disp-away-logo" src="dbb.png" alt="Away Logo" data-team="DUFFLE BAGGBOYZ" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -374,7 +374,7 @@
 
       <!-- Right Team Logo (Default Game 1 Home) -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="4tf.png" alt="Home Logo" data-team="4TF" onerror="handleImageError(this)">
+        <img id="disp-home-logo" src="redeye.png" alt="Home Logo" data-team="RED EYE" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -389,14 +389,14 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 10 • Serpico Field)</div>
+    <div class="section-label">Select Game (Week 11 • Redmond Park)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">SOB</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">DUFFLE BAGGBOYZ</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           
           <div class="score-controls">
@@ -415,7 +415,7 @@
 
         <!-- Home Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">4TF</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">RED EYE</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           
           <div class="score-controls">
@@ -464,6 +464,14 @@
        MASTER TEAM LOGO DIRECTORY
        ========================================================== */
     const TEAM_LOGOS = {
+      "DUFFLE BAGGBOYZ": "dbb.png",
+      "RED EYE": "redeye.png",
+      "GRIZZLIES": "grizzlies.png",
+      "WILDBOYZ": "wb.png",
+      "USUAL SUSPECTS": "us.png",
+      "HONEY BADGERS": "bdg.png",
+      "CL": "cl.png",
+      "FALLEN ANGELS": "fa.png",
       "VGZ": "vgz.png",
       "BLUB BLUB": "bl.png",
       "REAPERS": "reapers.png",
@@ -475,11 +483,6 @@
       "TTP": "ttp.png",
       "DIRTY BIRDS": "db.png",
       "SOB": "sob.png",
-      "HONEY BADGERS": "bdg.png",
-      "DUFFLE BAGGBOYZ": "dbb.png",
-      "GRIZZLIES": "grizzlies.png",
-      "WILDBOYZ": "wb.png",
-      "CL": "cl.png",
       "PITBULLS": "pb.png",
       "THUNDERCATS": "tc.png"
     };
@@ -489,14 +492,14 @@
     }
 
     /* ==========================================================
-       WEEK 10 MATCHUPS (SERPICO FIELD)
+       WEEK 11 MATCHUPS (REDMOND PARK)
        ========================================================== */
     const WEEK_GAMES = [
-      { id: 1, time: "8:00 AM",  away: "SOB",      home: "4TF" },
-      { id: 2, time: "9:00 AM",  away: "SOB",      home: "NEW WAVE" },
-      { id: 3, time: "10:00 AM", away: "VGZ",      home: "TTP" },
-      { id: 4, time: "11:00 AM", away: "REAPERS",  home: "BLUB BLUB" },
-      { id: 5, time: "12:00 PM", away: "SENATORS", home: "DIRTY BIRDS" }
+      { id: 1, time: "8:00 AM",  away: "DUFFLE BAGGBOYZ", home: "RED EYE" },
+      { id: 2, time: "9:00 AM",  away: "DUFFLE BAGGBOYZ", home: "GRIZZLIES" },
+      { id: 3, time: "10:00 AM", away: "WILDBOYZ",        home: "GRIZZLIES" },
+      { id: 4, time: "11:00 AM", away: "USUAL SUSPECTS",  home: "HONEY BADGERS" },
+      { id: 5, time: "12:00 PM", away: "CL",              home: "FALLEN ANGELS" }
     ];
 
     /* ==========================================================
