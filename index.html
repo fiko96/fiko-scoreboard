@@ -363,7 +363,7 @@
 
       <!-- Left Team Logo (Default Game 1 Away) -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="dbb.png" alt="Away Logo" data-team="DUFFLE BAGGBOYZ" onerror="handleImageError(this)">
+        <img id="disp-away-logo" src="sob.png" alt="Away Logo" data-team="SOB" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -374,7 +374,7 @@
 
       <!-- Right Team Logo (Default Game 1 Home) -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="redeye.png" alt="Home Logo" data-team="RED EYE" onerror="handleImageError(this)">
+        <img id="disp-home-logo" src="reapers.png" alt="Home Logo" data-team="REAPERS" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -389,14 +389,14 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Week 11 • Redmond Park)</div>
+    <div class="section-label">Select Game (Sunday Matchups)</div>
     <div class="game-grid" id="game-buttons"></div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">DUFFLE BAGGBOYZ</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">SOB</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           
           <div class="score-controls">
@@ -415,7 +415,7 @@
 
         <!-- Home Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">RED EYE</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">REAPERS</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           
           <div class="score-controls">
@@ -443,12 +443,12 @@
   <script>
     function createCrestBadge(text, bgHex = "#161e2e", textHex = "#ffffff", strokeHex = "#ffffff") {
       const label = (text || "TEAM").trim().toUpperCase();
-      if (label === "RED EYE") {
-        bgHex = "#22060a";
-        strokeHex = "#ff334b";
-      } else if (label === "METAL MILITIA") {
-        bgHex = "#141820";
-        strokeHex = "#94a3b8";
+      if (label === "FISH PEOPLE") {
+        bgHex = "#082f49";
+        strokeHex = "#38bdf8";
+      } else if (label === "RUMPLEPIGS") {
+        bgHex = "#2a1205";
+        strokeHex = "#f97316";
       }
 
       const words = label.split(/\s+/);
@@ -464,8 +464,8 @@
           <text x="50" y="67" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${line2}</text>
         `;
       } else {
-        const fontSize = label.length > 7 ? 15 : label.length > 4 ? 18 : 26;
-        textElements = `<text x="50" y="58" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${label}</text>`;
+        const fontSize = label.length > 8 ? 12 : label.length > 6 ? 15 : label.length > 4 ? 18 : 26;
+        textElements = `<text x="50" y="56" font-size="${fontSize}" font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="${textHex}" text-anchor="middle">${label}</text>`;
       }
 
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
@@ -476,8 +476,31 @@
     }
 
     function handleImageError(img) {
-      const teamName = img.dataset.team || img.alt || "TEAM";
-      if (img.src.endsWith(".png")) {
+      const teamName = (img.dataset.team || img.alt || "TEAM").toUpperCase();
+      let step = parseInt(img.dataset.fallbackStep || "0");
+      img.dataset.fallbackStep = step + 1;
+
+      if (teamName.includes("FISH PEOPLE")) {
+        const variants = ["fishpeople.png", "fp.jpg", "fishpeople.jpg"];
+        if (step < variants.length) {
+          img.src = variants[step];
+          return;
+        }
+        img.src = createCrestBadge("FISH PEOPLE");
+        return;
+      }
+
+      if (teamName.includes("RUMPLEPIGS")) {
+        const variants = ["rumplepigs.png", "rp.jpg", "rumplepigs.jpg"];
+        if (step < variants.length) {
+          img.src = variants[step];
+          return;
+        }
+        img.src = createCrestBadge("RUMPLEPIGS");
+        return;
+      }
+
+      if (step === 0 && img.src.endsWith(".png")) {
         img.src = img.src.replace(".png", ".jpg");
       } else if (!img.src.startsWith("data:image")) {
         img.src = createCrestBadge(teamName);
@@ -488,8 +511,16 @@
        MASTER TEAM LOGO DIRECTORY
        ========================================================== */
     const TEAM_LOGOS = {
+      "SOB": "sob.png",
+      "REAPERS": "reapers.png",
+      "VGZ": "vgz.png",
+      "FISH PEOPLE": "fp.png",
+      "RUMPLEPIGS": "rp.png",
+      "ALPHAS": "alphas.png",
+      "4TF": "4tf.png",
+      "TTP": "ttp.png",
       "DUFFLE BAGGBOYZ": "dbb.png",
-      "RED EYE": createCrestBadge("RED EYE"),
+      "RED EYE": "redeye.png",
       "GRIZZLIES": "grizzlies.png",
       "METAL MILITIA": "mm.png",
       "WILDBOYZ": "wb.png",
@@ -497,17 +528,11 @@
       "CL": "cl.png",
       "FALLEN ANGELS": "fa.png",
       "USUAL SUSPECTS": "us.png",
-      "VGZ": "vgz.png",
       "BLUB BLUB": "bl.png",
-      "REAPERS": "reapers.png",
       "NEW WAVE": "nw.png",
-      "4TF": "4tf.png",
       "DUCKS": "ducks.png",
       "SENATORS": "sen.png",
-      "ALPHAS": "alphas.png",
-      "TTP": "ttp.png",
       "DIRTY BIRDS": "db.png",
-      "SOB": "sob.png",
       "PITBULLS": "pb.png",
       "THUNDERCATS": "tc.png"
     };
@@ -517,14 +542,13 @@
     }
 
     /* ==========================================================
-       WEEK 11 MATCHUPS (REDMOND PARK)
+       GAME SCHEDULE (8:00 AM - 11:00 AM)
        ========================================================== */
     const WEEK_GAMES = [
-      { id: 1, time: "8:00 AM",  away: "DUFFLE BAGGBOYZ", home: "RED EYE" },
-      { id: 2, time: "9:00 AM",  away: "DUFFLE BAGGBOYZ", home: "GRIZZLIES" },
-      { id: 3, time: "10:00 AM", away: "METAL MILITIA",   home: "GRIZZLIES" },
-      { id: 4, time: "11:00 AM", away: "WILDBOYZ",        home: "HONEY BADGERS" },
-      { id: 5, time: "12:00 PM", away: "CL",              home: "FALLEN ANGELS" }
+      { id: 1, time: "8:00 AM",  away: "SOB",        home: "REAPERS" },
+      { id: 2, time: "9:00 AM",  away: "VGZ",        home: "FISH PEOPLE" },
+      { id: 3, time: "10:00 AM", away: "RUMPLEPIGS", home: "ALPHAS" },
+      { id: 4, time: "11:00 AM", away: "4TF",        home: "TTP" }
     ];
 
     /* ==========================================================
@@ -589,11 +613,13 @@
           if (val.awayLogo) {
             const el = document.getElementById('disp-away-logo');
             el.dataset.team = val.awayTeam || "AWAY";
+            el.dataset.fallbackStep = "0";
             el.src = val.awayLogo;
           }
           if (val.homeLogo) {
             const el = document.getElementById('disp-home-logo');
             el.dataset.team = val.homeTeam || "HOME";
+            el.dataset.fallbackStep = "0";
             el.src = val.homeLogo;
           }
         } else {
