@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,7 +197,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
     }
 
     .game-btn {
@@ -229,6 +230,56 @@
     .game-btn-match {
       font-size: 13px;
       font-weight: 700;
+    }
+
+    /* Custom Playoff Matchup Picker */
+    .bracket-picker-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 20px;
+    }
+
+    .bracket-picker-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .team-select {
+      background: #0b0f19;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      width: 100%;
+    }
+
+    .vs-badge {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    .set-match-btn {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .set-match-btn:active {
+      opacity: 0.85;
     }
 
     .scoreboard-box {
@@ -352,6 +403,15 @@
       margin-top: 14px;
       line-height: 1.5;
     }
+
+    @media (max-width: 520px) {
+      .bracket-picker-row {
+        grid-template-columns: 1fr;
+      }
+      .vs-badge {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -361,9 +421,9 @@
     <div class="banner-overlay-wrapper">
       <img class="banner-frame-bg" src="frame.png" alt="Scoreboard Frame">
 
-      <!-- Left Team Logo (Default Game 1 Away) -->
+      <!-- Left Team Logo (Default 9 AM Away: NEW WAVE) -->
       <div class="banner-logo-slot away">
-        <img id="disp-away-logo" src="sob.png" alt="Away Logo" data-team="SOB" onerror="handleImageError(this)">
+        <img id="disp-away-logo" src="nw.png" alt="Away Logo" data-team="NEW WAVE" onerror="handleImageError(this)">
       </div>
 
       <!-- Away Score -->
@@ -372,9 +432,9 @@
       <!-- Home Score -->
       <div class="banner-score home" id="disp-home-score">0</div>
 
-      <!-- Right Team Logo (Default Game 1 Home) -->
+      <!-- Right Team Logo (Default 9 AM Home: SOB) -->
       <div class="banner-logo-slot home">
-        <img id="disp-home-logo" src="reapers.png" alt="Home Logo" data-team="REAPERS" onerror="handleImageError(this)">
+        <img id="disp-home-logo" src="sob.png" alt="Home Logo" data-team="SOB" onerror="handleImageError(this)">
       </div>
     </div>
   </div>
@@ -389,14 +449,36 @@
       </div>
     </div>
 
-    <div class="section-label">Select Game (Sunday Matchups)</div>
+    <div class="section-label">11/15 Upper Level Playoffs • Serpico Field</div>
     <div class="game-grid" id="game-buttons"></div>
+
+    <div class="section-label">Custom Bracket Matchup (Semifinals / 12 PM Championship)</div>
+    <div class="bracket-picker-box">
+      <div class="bracket-picker-row">
+        <select id="custom-away-select" class="team-select">
+          <option value="NEW WAVE">#1 NEW WAVE</option>
+          <option value="SOB">#8 SOB</option>
+          <option value="FISH PEOPLE">#4 FISH PEOPLE (BLUB BLUB)</option>
+          <option value="4TF">#2 4TF</option>
+          <option value="RUMPLEPIGS">#3 RUMPLEPIGS</option>
+        </select>
+        <span class="vs-badge">VS</span>
+        <select id="custom-home-select" class="team-select">
+          <option value="4TF">#2 4TF</option>
+          <option value="RUMPLEPIGS">#3 RUMPLEPIGS</option>
+          <option value="FISH PEOPLE">#4 FISH PEOPLE (BLUB BLUB)</option>
+          <option value="NEW WAVE">#1 NEW WAVE</option>
+          <option value="SOB">#8 SOB</option>
+        </select>
+        <button class="set-match-btn" onclick="applyCustomMatchup()">SET GAME</button>
+      </div>
+    </div>
 
     <div class="scoreboard-box">
       <div class="score-columns">
         <!-- Away Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-away-name">SOB</div>
+          <div class="ctrl-team-name" id="ctrl-away-name">NEW WAVE</div>
           <div class="ctrl-score-value" id="ctrl-away-score">0</div>
           
           <div class="score-controls">
@@ -415,7 +497,7 @@
 
         <!-- Home Team Controller -->
         <div class="team-controller">
-          <div class="ctrl-team-name" id="ctrl-home-name">REAPERS</div>
+          <div class="ctrl-team-name" id="ctrl-home-name">SOB</div>
           <div class="ctrl-score-value" id="ctrl-home-score">0</div>
           
           <div class="score-controls">
@@ -481,7 +563,7 @@
       img.dataset.fallbackStep = step + 1;
 
       if (teamName.includes("FISH PEOPLE")) {
-        const variants = ["fishpeople.png", "fp.jpg", "fishpeople.jpg"];
+        const variants = ["bl.png", "fp.png", "fishpeople.png", "bl.jpg"];
         if (step < variants.length) {
           img.src = variants[step];
           return;
@@ -511,13 +593,15 @@
        MASTER TEAM LOGO DIRECTORY
        ========================================================== */
     const TEAM_LOGOS = {
+      "NEW WAVE": "nw.png",
       "SOB": "sob.png",
+      "FISH PEOPLE": "bl.png",
+      "BLUB BLUB": "bl.png",
+      "4TF": "4tf.png",
+      "RUMPLEPIGS": "rp.png",
       "REAPERS": "reapers.png",
       "VGZ": "vgz.png",
-      "FISH PEOPLE": "fp.png",
-      "RUMPLEPIGS": "rp.png",
       "ALPHAS": "alphas.png",
-      "4TF": "4tf.png",
       "TTP": "ttp.png",
       "DUFFLE BAGGBOYZ": "dbb.png",
       "RED EYE": "redeye.png",
@@ -528,8 +612,6 @@
       "CL": "cl.png",
       "FALLEN ANGELS": "fa.png",
       "USUAL SUSPECTS": "us.png",
-      "BLUB BLUB": "bl.png",
-      "NEW WAVE": "nw.png",
       "DUCKS": "ducks.png",
       "SENATORS": "sen.png",
       "DIRTY BIRDS": "db.png",
@@ -542,13 +624,14 @@
     }
 
     /* ==========================================================
-       GAME SCHEDULE (8:00 AM - 11:00 AM)
+       11/15 PLAYOFF SCHEDULE (SERPICO FIELD)
        ========================================================== */
     const WEEK_GAMES = [
-      { id: 1, time: "8:00 AM",  away: "SOB",        home: "REAPERS" },
-      { id: 2, time: "9:00 AM",  away: "VGZ",        home: "FISH PEOPLE" },
-      { id: 3, time: "10:00 AM", away: "RUMPLEPIGS", home: "ALPHAS" },
-      { id: 4, time: "11:00 AM", away: "4TF",        home: "TTP" }
+      { id: 1, label: "9:00 AM • Quarterfinal",    away: "NEW WAVE", awaySeed: "#1", home: "SOB",         homeSeed: "#8" },
+      { id: 2, label: "10:00 AM • Semifinal (1v4)", away: "NEW WAVE", awaySeed: "#1", home: "FISH PEOPLE", homeSeed: "#4" },
+      { id: 3, label: "10:00 AM • Semifinal (8v4)", away: "SOB",      awaySeed: "#8", home: "FISH PEOPLE", homeSeed: "#4" },
+      { id: 4, label: "11:00 AM • Semifinal (2v3)", away: "4TF",      awaySeed: "#2", home: "RUMPLEPIGS",  homeSeed: "#3" },
+      { id: 5, label: "12:00 PM • Championship",    away: "NEW WAVE", awaySeed: "",   home: "4TF",         homeSeed: "" }
     ];
 
     /* ==========================================================
@@ -639,9 +722,11 @@
         btn.className = `game-btn ${g.id === activeGameId ? 'active' : ''}`;
         btn.id = `btn-game-${g.id}`;
         btn.onclick = () => selectGame(g.id);
+        const awayLabel = g.awaySeed ? `${g.awaySeed} ${g.away}` : g.away;
+        const homeLabel = g.homeSeed ? `${g.homeSeed} ${g.home}` : g.home;
         btn.innerHTML = `
-          <div class="game-btn-time">Game ${g.id} • ${g.time}</div>
-          <div class="game-btn-match">${g.away} vs ${g.home}</div>
+          <div class="game-btn-time">${g.label}</div>
+          <div class="game-btn-match">${awayLabel} vs ${homeLabel}</div>
         `;
         container.appendChild(btn);
       });
@@ -661,6 +746,21 @@
         homeTeam: match.home,
         awayLogo: getLogo(match.away),
         homeLogo: getLogo(match.home),
+        awayScore: 0,
+        homeScore: 0
+      });
+    }
+
+    function applyCustomMatchup() {
+      const awayTeam = document.getElementById('custom-away-select').value;
+      const homeTeam = document.getElementById('custom-home-select').value;
+      document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+
+      db.ref("/").update({
+        awayTeam: awayTeam,
+        homeTeam: homeTeam,
+        awayLogo: getLogo(awayTeam),
+        homeLogo: getLogo(homeTeam),
         awayScore: 0,
         homeScore: 0
       });
@@ -692,3 +792,4 @@
   </script>
 </body>
 </html>
+```
